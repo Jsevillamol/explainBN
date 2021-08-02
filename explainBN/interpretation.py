@@ -147,11 +147,12 @@ def draw_model(model, arguments=[], argument=None, output_fn = "static/graph.png
   f = plt.figure()
 
   nx.draw(G, pos, 
-          node_size = 1600,
+          node_size = 1700,
           width = 5,
           with_labels=True, 
           node_color = node_color_map,
           edge_color = edge_color_map,
+          edgecolors='DimGray',
           font_family = 'Arial',
           font_weight = 'bold')
           
