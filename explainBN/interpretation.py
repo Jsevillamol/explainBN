@@ -132,17 +132,17 @@ def draw_model(model, arguments=[], argument=None, output_fn = "static/graph.png
 
     node_color_map = ['LightSalmon' if node == target else
                       'SkyBlue' if node in sources else 
-                      'LightGreen' if node in nodes_to_color else 
+                      'CornflowerBlue' if node in nodes_to_color else 
                       'Gainsboro' 
                       for node in model]
         
-    edge_color_map = ['DarkOliveGreen' if edge in edges_to_color 
+    edge_color_map = ['DodgerBlue' if edge in edges_to_color 
                               or swap(edge) in edges_to_color 
                       else 'DimGray' 
                       for edge in model.edges]
   else:
     node_color_map = 'Khaki'
-    edge_color_map = 'DarkOliveGreen'
+    edge_color_map = 'DodgerBlue'
    
   f = plt.figure()
 
