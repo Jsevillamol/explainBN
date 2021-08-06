@@ -31,10 +31,14 @@ def my_form():
                                             
     variable_description = model.variable_description.to_html(classes='data')
     
+    evidence_explanation = [model.explanation_dictionary[obs]["explanation"]
+                            for obs in evidence.items()]
+    
     return render_template("template.html",
                            bn_model = model,
                            bn_graph=bn_graph_fn,
                            variable_description=variable_description,
+                           evidence_explanation = evidence_explanation,
                            interactive_output = interactive_output,
                            squeeze_fn = np.squeeze, # Yes I know this is very hacky
                            )
