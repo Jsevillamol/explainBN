@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title> Survey on Bayesian Network explanations </title>
   <style>
     svg { border: 1px solid black; }
     svg g rect.node-shape { border-radius: 5px !important; fill:#cceeff !important; cursor: move; }
@@ -18,6 +17,11 @@
   <script src="{{ url_for('static', filename='node_modules/dagre/dist/dagre.core.js') }}"></script>
   <script src="{{ url_for('static', filename='node_modules/jsbayes/jsbayes.js') }}"></script>
   <script src="{{ url_for('static', filename='node_modules/jsbayes-viz/jsbayes-viz.js') }}"></script>
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link href="stylenav.css" rel="stylesheet" type="text/css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <script>
     function getGraph() {
       
@@ -69,9 +73,28 @@
 </head>
 
 <body>
-	<h1>Survey on Bayesian Networks</h1>
+<nav class="navbar navbar-default navbar-fixed-top navbar-customclass">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/template.html" style="color: #BC2F31"><strong>Survey</strong></a>
 
-
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      <sapn class="icon-bar"></sapn>
+      </button>
+    </div>
+    <ul class="nav navbar-nav navbar-right collapse navbar-collapse">
+      <li class="active"><a href="#info">Information</a></li>
+	      <li><a href="#consent">Consent Form</a></li>
+      <li><a href="#q1">Q1</a></li>
+		<li><a href="#q2">Q2</a></li>
+		<li><a href="#q3">Q3</a></li>
+		<li><a href="#q4">Q4</a></li>
+    </ul>
+  </div>
+</nav>
 
 <div class="jumbotron text-center">
 <h1>Survey on Bayesian Networks</h1>
@@ -79,27 +102,63 @@
 
 <div class="container">
   <div class="row">
+	  <h1 id="info">Participants Information</h1>
 	  
-  
+	 <h4>
+Thank you for helping us test our Bayesian Network explainer system.
+
+<br>Here you will see a Bayesian Network, some evidence and an explained output.
+
+<br>The Bayesian Network we will be using as an example is used for medical diagnosis. 
+<br>In particular, it is used to determine the chances that a patient has lung cancer, given their symptoms, risk factors and medical history.
+ </h4>
+	  
+	</div>
+	<hr>
+	
+	<div class="row"> 	  <h1 id="consent">Consent Form</h1> </div>
+
+	
+	 <div class="row">
+	  <h1 id="q1">Q1</h1>
+	  
+	 <p class="textbig">
+
+<br>Here you will see a Bayesian Network, some evidence and an explained output.
+
+<br>The Bayesian Network we will be using as an example is used for medical diagnosis. 
+<br>In particular, it is used to determine the chances that a patient has lung cancer, given their symptoms, risk factors and medical history.
+ </p>
+	  
+	
+
   <!-- Bayesian Network graph -->
 	<img src="{{ url_for('static', filename=bn_graph) }}" />
-	
+	</div>
+	 <hr> 
+	  
+	<div class="row" id="q2"> 	  
   <!-- Table with explanation of the variables in the BN -->
   {{ variable_description|safe }}
-  
+	</div>
+	 
+	   <p class="textbig" id="q3">
   <!-- Interactive container with the explanation -->
   {% for output in interactive_output %}
     <div class="tabcontent">
     {% for line in output.text %}
-      <p> {{ line }} </p>
+      <p> {{ line }} </p> <hr>
     {% endfor %}
     <img src="{{ url_for('static', filename=output.img) }}" />
     </div>
   {% endfor %}
-  
+    </p> <hr>
+	
+	<p class="textbig" id="q4">
   <!-- Javascript visualization -->
   <svg id="bbn"></svg>
   
+		</p> <hr>
 	<!-- Survey -->  
 	  <iframe src="https://hwsml.eu.qualtrics.com/jfe/form/SV_ey5G9YtIJMr2hAW" height="800px" width="600px">TEST SURVEY</iframe>
 
