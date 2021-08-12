@@ -20,7 +20,7 @@
 	  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <link href="stylenav.css" rel="stylesheet" type="text/css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <script>
     function getGraph() {
@@ -70,6 +70,11 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  
+  <!-- Code for the SurveyJS -->
+  <link href="https://unpkg.com/survey-jquery@1.8.60/modern.css" type="text/css" rel="stylesheet" />
+  <script src="https://unpkg.com/survey-jquery@1.8.60/survey.jquery.min.js"></script>
+  
 </head>
 
 <body>
@@ -173,16 +178,36 @@ Thank you for helping us test our Bayesian Network explainer system.
   <svg id="bbn"></svg>
   
 		</p> <hr>
-	<!-- Survey -->  
-	  <iframe src="https://hwsml.eu.qualtrics.com/jfe/form/SV_ey5G9YtIJMr2hAW" height="800px" width="600px">TEST SURVEY</iframe>
+   
+  <!-- SurveyJS container -->
+	<div id="surveyContainer"></div>
+  <script>
+  Survey.StylesManager.applyTheme("modern");
+  
+  function sendDataToServer(survey) {
+    survey.setValue("bn", "asia")
+    survey.setValue("p", 0.2)
+    survey.setValue("is_treatment", true)
+    survey.setValue("mistake", "No mistake")
+    survey.sendResult('2fd3f481-70d1-4b40-ab8b-611d89238ad5');
+  }
 
-  <form action="." method="POST">
-    <p> Is there a mistake in the network? </p>
-    <input type="text" name="text1">
-    <p> If so, where is the mistake? </p>
-    <input type="text" name="text2">
-    <input type="submit" name="my-form" value="Submit">
-  </form>
+  var surveyJSON = { surveyId: 'b48b6122-d333-462a-bd57-34ca878560e7', 
+                     surveyPostId: '2fd3f481-70d1-4b40-ab8b-611d89238ad5'}
+
+  var survey = new Survey.Model(surveyJSON);
+  
+  $("#surveyContainer").Survey({
+      model: survey,
+      onComplete: sendDataToServer
+  });
+  
+  
+
+  </script>
+  
+  
+  
   
   </div>
 </div>   
