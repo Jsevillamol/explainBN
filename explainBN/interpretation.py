@@ -46,6 +46,7 @@ def read_scoring_table(model, target, evidence, scoring_table, interactive = Fal
     interactive_output.append({
       "text" : [baseline_entry["explanation"]],
       "img"  : fn,
+      "id" : len(interactive_output),
       })
         
 
@@ -72,6 +73,7 @@ def read_scoring_table(model, target, evidence, scoring_table, interactive = Fal
       interactive_output.append({
         "text" : text,
         "img"  : fn,
+        "id" : len(interactive_output),
         })
 
   if interactive:
@@ -91,6 +93,7 @@ def read_scoring_table(model, target, evidence, scoring_table, interactive = Fal
     interactive_output.append({
         "text" : [text],
         "img"  : fn,
+        "id" : len(interactive_output),
         })
       
     return interactive_output
