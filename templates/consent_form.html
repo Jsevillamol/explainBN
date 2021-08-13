@@ -1,0 +1,19 @@
+<!-- Libraries for SurveyJS -->
+<link href="https://unpkg.com/survey-jquery@1.8.60/modern.css" type="text/css" rel="stylesheet" />
+<script src="https://unpkg.com/survey-jquery@1.8.60/survey.jquery.min.js"></script>
+
+<!-- Form container -->
+<div id="consentFormContainer"></div>
+  
+<script>
+Survey.StylesManager.applyTheme("modern");
+
+var surveyJSON = { surveyId: '67a2625c-4cef-4342-a966-74432c5cb3e8', 
+                   surveyPostId: '38fc3d75-8b29-4c2d-ad2e-d84aed291ba5'}
+
+var survey = new Survey.Model(surveyJSON);
+$("#consentFormContainer").Survey({
+    model: survey,
+});
+</script>
+

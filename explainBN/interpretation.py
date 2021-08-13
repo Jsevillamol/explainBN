@@ -10,7 +10,11 @@ import matplotlib.pyplot as plt
 
 # INTERPRETING SCORING TABLE
 
-def read_scoring_table(model, target, evidence, scoring_table, interactive = False):
+def read_scoring_table(model, target, evidence, scoring_table, 
+                       interactive = False, 
+                       interactive_output_prefix='graph'):
+  """ If interactive = False, return logodd score of target given evidence, according to scoring table
+  """
   # Find baseline entry and drop it from table
   baseline_entry = scoring_table.iloc[0]
   score = baseline_entry["score"]
@@ -40,7 +44,7 @@ def read_scoring_table(model, target, evidence, scoring_table, interactive = Fal
   if interactive:
     interactive_output = []
     arguments = [create_trivial_argument(target[0])]
-    fn = f"graph_{len(interactive_output)}.png"
+    fn = f"{interactive_output_prefix}_{len(interactive_output)}.png"
     draw_model(model, arguments, output_fn = f"static/{fn}")
     
     interactive_output.append({

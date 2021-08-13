@@ -1,0 +1,12 @@
+<div>
+  {% if evidence_explanation|length == 0 %}
+  <p> We have no additional evidence </p>
+  {% else %}
+  <p> We have observed that: </p>
+  {% endif %}
+  <ul>
+  {% for line in evidence_explanation %}
+    <li>{{ line }}</li>
+  {% endfor %}
+  </ul>
+</div>

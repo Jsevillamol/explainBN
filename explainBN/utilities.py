@@ -177,6 +177,10 @@ def get_target(argument):
 random_evidence = lambda model, evidence_nodes : \
    {node : np.random.choice(list(model.states[node])) \
     for node in evidence_nodes if np.random.rand() < 0.5}
+    
+explain_evidence = lambda model, evidence : \
+                     [model.explanation_dictionary[obs]["explanation"]
+                      for obs in evidence.items()]
 
 def introduce_error(model, target, evidence, th = 0.1):
 

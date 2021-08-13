@@ -88,7 +88,7 @@ def load_network(network_name, online = False, verbose=False):
         ("lung", "Whether the patient has lung cancer"),
         ("bronc", "Whether the patient has bronchitis"),
         ("tub", "Whether the patient has tuberculosis"),
-        ("either", "True if the patient has either lung cancer or tuberculosis"),
+        ("lung_disease", "True if the patient has either lung cancer or tuberculosis"),
         ("xray", "Whether the patient's xray results show an abnormality"),
         ("dysp", "Whether the patient experiences shortness of breath (dyspnea)"),
     ], columns=['Variable', 'Meaning'])
@@ -139,19 +139,19 @@ def load_network(network_name, online = False, verbose=False):
             'contrastive_explanation' : 'the patient has tuberculosis',
             'polarity'    : 'negative',
         },
-        ('either', 'yes')   : {
-            'explanation' : 'the patient either has tuberculosis or lung cancer',
+        ('lung_disease', 'yes')   : {
+            'explanation' : 'the patient has a serious lung disease',
             'polarity'    : 'positive',
         },
-        ('either', 'no')   : {
-            'explanation' : 'the patient does not have tuberculosis nor lung cancer',
+        ('lung_disease', 'no')   : {
+            'explanation' : 'the patient does not have a serious lung disease',
             'polarity'    : 'positive',
         },
-        ('xray', 'yes')   : {
+        ('xray', 'abnormal')   : {
             'explanation' : 'the patient\'s xray results show an abnormality',
             'polarity'    : 'positive',
         },
-        ('xray', 'no')   : {
+        ('xray', 'normal')   : {
             'explanation' : 'the patient\'s xray results are normal',
             'polarity'    : 'positive',
         },
