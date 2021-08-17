@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,10 +36,12 @@
     <ul class="nav navbar-nav navbar-right collapse navbar-collapse">
       <li class="active"><a href="#info">Information</a></li>
 	      <li><a href="#consent">Consent Form</a></li>
+
 		
 		<li><a href="#demographics">Demographics</a></li>
 		
-		
+	
+
 				<li><a href="#instructions">Instructions</a></li>
 
 <!--
@@ -146,8 +149,8 @@ For general information about how we use your data, go to: <span style="color:re
 	</div>
 	<hr>
 	
-	<div class="row" id="consent"> 	  
-  <h1>Consent Form</h1> 
+<div class="row"> 	  
+  <h1 id="consent">Consent Form</h1> 
   
   <!-- Libraries for SurveyJS -->
 <link href="https://unpkg.com/survey-jquery@1.8.60/modern.css" type="text/css" rel="stylesheet" />
@@ -170,22 +173,45 @@ $("#consentFormContainer").Survey({
 
   
 	</div>
-  
 	
-	<div class="row"  id="demographics"> 	  
-  <h1>Demographics</h1> 
-		
-		
-		AGE STUFF RELATED
+	
+	
+	
+	<div class="row"> 	  
+  <h1 id="demographics">Demographics</h1> 
+  
+  <!-- Libraries for SurveyJS -->
+<link href="https://unpkg.com/survey-jquery@1.8.60/modern.css" type="text/css" rel="stylesheet" />
+<script src="https://unpkg.com/survey-jquery@1.8.60/survey.jquery.min.js"></script>
+
+<!-- Form container -->
+<div id="surveyContainer"></div>
+  
+<script>
+Survey.StylesManager.applyTheme("modern");
+
+var surveyJSON = {title:"question2",pages:[{name:"page1",elements:[{type:"checkbox",name:"question1",title:"Please select your age",choices:[{value:"item1",text:"18 - 22"},{value:"item2",text:"23 - 29"},{value:"item3",text:"30 - 39"},{value:"item4",text:"40 - 49"},{value:"item5",text:"50 - 59"},{value:"item6",text:"60 +"}]},{type:"checkbox",name:"question2",title:"Please select your gender",choices:[{value:"item1",text:"Female"},{value:"item2",text:"Male"},{value:"item3",text:"Other"},{value:"item4",text:"Would prefer not to answer"}]},{type:"checkbox",name:"question3",title:"Please select your English Proficiency Level",choices:[{value:"item6",text:"Beginner"},{value:"item7",text:"Elementary"},{value:"item1",text:"Intermediate"},{value:"item2",text:"Pre-Intermediate"},{value:"item3",text:"Upper Intermediate"},{value:"item4",text:"Advanced"},{value:"item5",text:"Proficiency"}],otherText:"Elementary"},{type:"checkbox",name:"question4",title:"What level of expertise to you have in the field of Artificial Intelligence?",choices:[{value:"item1",text:"Beginner or Amateur - just started to know about general issues or want to get insights on this topic"},{value:"item2",text:"User - can answer general questions and have some basic concepts"},{value:"item3",text:"Professional - can answer and discuss domain-specific well"},{value:"item4",text:"Expert - highly informative and can timely answer critical questions"}]}]}],showTitle:false}
+
+function sendDataToServer(survey) {
+    survey.sendResult('24e9d4cd-f5f6-4742-858a-6506c5e47565');
+}
+
+var survey = new Survey.Model(surveyJSON);
+$("#surveyContainer").Survey({
+    model: survey,
+    onComplete: sendDataToServer
+});
+</script>
+
+  
 	</div>
 	
 	
 	
-	
-	
-	 <div class="row" id="instructions">
-	    <h1>Instructions</h1> 
-
+  
+	 <div class="row">
+	  
+	  
 	 <p class="textbig">
 
 <br>Here you will see a Bayesian Network, some evidence and an explained output.
@@ -198,11 +224,11 @@ $("#consentFormContainer").Survey({
 	
 
   <!-- Bayesian Network graph -->
-	<img src="/explainBN/static/graph.png" />
+	<img src="/static/graph.png" />
 	</div>
 	 <hr> 
-   
-	<table class="table table-bordered">
+
+  <table border="1" class="dataframe data">
   <thead>
     <tr style="text-align: right;">
       <th></th>
@@ -253,7 +279,7 @@ $("#consentFormContainer").Survey({
     </tr>
   </tbody>
 </table>
-	 
+
   <h1 id="q1">Treatment no mistake</h1>
   
   <div>
@@ -262,11 +288,9 @@ $("#consentFormContainer").Survey({
   
   <ul>
   
-    <li>the patient has tuberculosis</li>
-  
     <li>the patient does not experience shortness of breath</li>
   
-    <li>the patient does not smoke</li>
+    <li>the patient&#39;s xray results are normal</li>
   
   </ul>
 </div>
@@ -360,48 +384,46 @@ function openTab(evt, tabName) {
      The baseline probability that the patient has lung cancer is 5.50% 
   
   </p> <hr>
-  <img src="/explainBN/static/io_no_mistake_0.png" />
+  <img src="/static/io_no_mistake_0.png" />
   </div>
 
   <div id="explanation_treatment_no_mistake_1", class="tabcontent">
   <p>
   
-     We have observed that the patient does not smoke 
+     We have observed that the patient&#39;s xray results are normal 
   
-     this greatly decreases the likelihood that the patient has lung cancer 
+     this extremely increases the likelihood that the patient does not have a serious lung disease 
   
-     This consideration changes the probability that the patient has lung cancer from 5.50% to 1.00% 
+     this extremely decreases the likelihood that the patient has lung cancer 
+  
+     This consideration changes the probability that the patient has lung cancer from 5.50% to 0.24% 
   
   </p> <hr>
-  <img src="/explainBN/static/graph_1.png" />
+  <img src="/static/graph_1.png" />
   </div>
 
   <div id="explanation_treatment_no_mistake_2", class="tabcontent">
   <p>
   
-     We have observed that the patient does not smoke 
-  
-     this moderately decreases the likelihood that the patient has bronchitis 
-  
-     on the other hand, we have observed that the patient does not experience shortness of breath 
+     We have observed that the patient does not experience shortness of breath 
   
      this greatly increases the likelihood that the patient does not have a serious lung disease 
   
      this moderately decreases the likelihood that the patient has lung cancer 
   
-     This consideration changes the probability that the patient has lung cancer from 1.00% to 0.52% 
+     This consideration changes the probability that the patient has lung cancer from 0.24% to 0.13% 
   
   </p> <hr>
-  <img src="/explainBN/static/graph_2.png" />
+  <img src="/static/graph_2.png" />
   </div>
 
   <div id="explanation_treatment_no_mistake_3", class="tabcontent">
   <p>
   
-     After taking into account these 3 arguments, we conclude that the probability that the patient has lung cancer is 0.52% 
+     After taking into account these 3 arguments, we conclude that the probability that the patient has lung cancer is 0.13% 
   
   </p> <hr>
-  <img src="/explainBN/static/graph_3.png" />
+  <img src="/static/graph_3.png" />
   </div>
 
 
@@ -423,7 +445,7 @@ Survey.StylesManager.applyTheme("modern");
 
 function sendDataToServer_survey_treatment_no_mistake(survey) {
   survey.setValue("bn", "asia")
-  survey.setValue("p", 0.005218071612272695)
+  survey.setValue("p", 0.001278393326580736)
   survey.setValue("is_treatment", true)
   survey.setValue("mistake", "no mistake")
   survey.sendResult('2fd3f481-70d1-4b40-ab8b-611d89238ad5');
@@ -451,25 +473,19 @@ $("#surveyContainer_survey_treatment_no_mistake").Survey({
   
     <li>the patient does not have bronchitis</li>
   
-    <li>the patient experiences shortness of breath</li>
-  
-    <li>the patient has not recently visited Asia</li>
-  
-    <li>the patient&#39;s xray results show an abnormality</li>
-  
-    <li>the patient does not smoke</li>
+    <li>the patient&#39;s xray results are normal</li>
   
   </ul>
 </div>
   
   <!-- Libraries for JSBayes-viz -->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-<script src="/explainBN/static/node_modules/d3/d3.js"></script>
-<script src="/explainBN/static/node_modules/lodash/lodash.js"></script>
-<script src="/explainBN/static/node_modules/graphlib/dist/graphlib.core.js"></script>
-<script src="/explainBN/static/node_modules/dagre/dist/dagre.core.js"></script>
-<script src="/explainBN/static/node_modules/jsbayes/jsbayes.js"></script>
-<script src="/explainBN/static/node_modules/jsbayes-viz/jsbayes-viz.js"></script>
+<script src="/static/node_modules/d3/d3.js"></script>
+<script src="/static/node_modules/lodash/lodash.js"></script>
+<script src="/static/node_modules/graphlib/dist/graphlib.core.js"></script>
+<script src="/static/node_modules/dagre/dist/dagre.core.js"></script>
+<script src="/static/node_modules/jsbayes/jsbayes.js"></script>
+<script src="/static/node_modules/jsbayes-viz/jsbayes-viz.js"></script>
 
 <style>
     svg { border: 1px solid black; }
@@ -581,7 +597,7 @@ Survey.StylesManager.applyTheme("modern");
 
 function sendDataToServer_survey_control_no_mistake(survey) {
   survey.setValue("bn", "asia")
-  survey.setValue("p", 0.36977344638554543)
+  survey.setValue("p", 0.0009484359737874253)
   survey.setValue("is_treatment", false)
   survey.setValue("mistake", "no mistake")
   survey.sendResult('2fd3f481-70d1-4b40-ab8b-611d89238ad5');
@@ -607,7 +623,9 @@ $("#surveyContainer_survey_control_no_mistake").Survey({
   
   <ul>
   
-    <li>the patient has not recently visited Asia</li>
+    <li>the patient&#39;s xray results show an abnormality</li>
+  
+    <li>the patient smokes</li>
   
   </ul>
 </div>
@@ -683,6 +701,14 @@ function openTab(evt, tabName) {
     1
   </button>
 
+  <button class="tablinks" onclick="openTab(event, 'explanation_treatment_mistake_2')" id="explanation_treatment_mistake_button_2">
+    2
+  </button>
+
+  <button class="tablinks" onclick="openTab(event, 'explanation_treatment_mistake_3')" id="explanation_treatment_mistake_button_3">
+    3
+  </button>
+
 </div>
 
 
@@ -693,16 +719,44 @@ function openTab(evt, tabName) {
      The baseline probability that the patient has lung cancer is 5.50% 
   
   </p> <hr>
-  <img src="/explainBN/static/io_mistake_0.png" />
+  <img src="/static/io_mistake_0.png" />
   </div>
 
   <div id="explanation_treatment_mistake_1", class="tabcontent">
   <p>
   
-     After taking into account these 1 arguments, we conclude that the probability that the patient has lung cancer is 5.50% 
+     We have observed that the patient smokes 
+  
+     this moderately increases the likelihood that the patient has lung cancer 
+  
+     This consideration changes the probability that the patient has lung cancer from 5.50% to 10.00% 
   
   </p> <hr>
-  <img src="/explainBN/static/graph_1.png" />
+  <img src="/static/graph_1.png" />
+  </div>
+
+  <div id="explanation_treatment_mistake_2", class="tabcontent">
+  <p>
+  
+     We have observed that the patient&#39;s xray results show an abnormality 
+  
+     this extremely increases the likelihood that the patient has a serious lung disease 
+  
+     this moderately increases the likelihood that the patient has lung cancer 
+  
+     This consideration changes the probability that the patient has lung cancer from 10.00% to 17.45% 
+  
+  </p> <hr>
+  <img src="/static/graph_2.png" />
+  </div>
+
+  <div id="explanation_treatment_mistake_3", class="tabcontent">
+  <p>
+  
+     After taking into account these 3 arguments, we conclude that the probability that the patient has lung cancer is 17.45% 
+  
+  </p> <hr>
+  <img src="/static/graph_3.png" />
   </div>
 
 
@@ -724,9 +778,9 @@ Survey.StylesManager.applyTheme("modern");
 
 function sendDataToServer_survey_treatment_mistake(survey) {
   survey.setValue("bn", "asia")
-  survey.setValue("p", 0.05499999999999999)
+  survey.setValue("p", 0.17453247454527182)
   survey.setValue("is_treatment", true)
-  survey.setValue("mistake", "dysp")
+  survey.setValue("mistake", "lung_disease")
   survey.sendResult('2fd3f481-70d1-4b40-ab8b-611d89238ad5');
 }
 
@@ -749,23 +803,25 @@ $("#surveyContainer_survey_treatment_mistake").Survey({
   
   <ul>
   
-    <li>the patient has not recently visited Asia</li>
+    <li>the patient experiences shortness of breath</li>
   
-    <li>the patient&#39;s xray results are normal</li>
+    <li>the patient has tuberculosis</li>
   
-    <li>the patient does not smoke</li>
+    <li>the patient&#39;s xray results show an abnormality</li>
+  
+    <li>the patient smokes</li>
   
   </ul>
 </div>
   
   <!-- Libraries for JSBayes-viz -->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-<script src="/explainBN/static/node_modules/d3/d3.js"></script>
-<script src="/explainBN/static/node_modules/lodash/lodash.js"></script>
-<script src="/explainBN/static/node_modules/graphlib/dist/graphlib.core.js"></script>
-<script src="/explainBN/static/node_modules/dagre/dist/dagre.core.js"></script>
-<script src="/explainBN/static/node_modules/jsbayes/jsbayes.js"></script>
-<script src="/explainBN/static/node_modules/jsbayes-viz/jsbayes-viz.js"></script>
+<script src="/static/node_modules/d3/d3.js"></script>
+<script src="/static/node_modules/lodash/lodash.js"></script>
+<script src="/static/node_modules/graphlib/dist/graphlib.core.js"></script>
+<script src="/static/node_modules/dagre/dist/dagre.core.js"></script>
+<script src="/static/node_modules/jsbayes/jsbayes.js"></script>
+<script src="/static/node_modules/jsbayes-viz/jsbayes-viz.js"></script>
 
 <style>
     svg { border: 1px solid black; }
@@ -877,9 +933,9 @@ Survey.StylesManager.applyTheme("modern");
 
 function sendDataToServer_survey_control_mistake(survey) {
   survey.setValue("bn", "asia")
-  survey.setValue("p", 0.6779196767898106)
+  survey.setValue("p", 0.1)
   survey.setValue("is_treatment", false)
-  survey.setValue("mistake", "lung")
+  survey.setValue("mistake", "tub")
   survey.sendResult('2fd3f481-70d1-4b40-ab8b-611d89238ad5');
 }
 
@@ -893,8 +949,6 @@ $("#surveyContainer_survey_control_mistake").Survey({
     onComplete: sendDataToServer_survey_control_mistake
 });
 </script>
-   
-  
   
   </div>
 </div>   
