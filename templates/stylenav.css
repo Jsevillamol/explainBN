@@ -4,7 +4,17 @@ body { padding-top: 60px; font-family: Arial, sans-serif;}
   body { padding-top: 60px; }
 }
 
-textbig
-{
-	font-size: calc(12px+3vw);
+.anchor {
+  display: block;
+  height: 10px;        
+  padding-top: 70px;  /* same height as header */
+  visibility: hidden;
+}
+
+
+.fa:before {   
+  content: "\f139";
+}
+.collapsed .fa:before {
+  content: "\f13a";
 }
