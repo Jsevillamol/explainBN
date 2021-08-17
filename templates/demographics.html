@@ -1,0 +1,23 @@
+<!-- Libraries for SurveyJS -->
+<link href="https://unpkg.com/survey-jquery@1.8.60/modern.css" type="text/css" rel="stylesheet" />
+<script src="https://unpkg.com/survey-jquery@1.8.60/survey.jquery.min.js"></script>
+
+<!-- Form container -->
+<div id="surveyContainer"></div>
+  
+<script>
+Survey.StylesManager.applyTheme("modern");
+
+var surveyJSON = {title:"Demographics",pages:[{name:"page1",elements:[{type:"ranking",name:"question1",title:"Please select your age",choices:[{value:"item1",text:"18 - 22"},{value:"item2",text:"23 - 29"},{value:"item3",text:"30 - 39"},{value:"item4",text:"40 - 49"},{value:"item5",text:"50 - 59"},{value:"item6",text:"60  +"}]},{type:"ranking",name:"question2",title:"Please select your gender",choices:[{value:"item1",text:"Female"},{value:"item2",text:"Male"},{value:"item3",text:"Other"},{value:"item4",text:"Would prefer not to answer"}]},{type:"ranking",name:"question3",title:"Please select your English Proficiency Level",choices:[{value:"item1",text:"Beginner"},{value:"item2",text:"Elementary"},{value:"item3",text:"Pre-Intermediate"},{value:"item4",text:"Intermediate"},{value:"item5",text:"Upper Intermediate"},{value:"item6",text:"Advanced"},{value:"item7",text:"Proficiency"}]},{type:"ranking",name:"question4",title:"What level of expertise to you have in the field of Artificial Intelligence?",choices:[{value:"item1",text:"Beginner or Amateur - just started to know about general issues or want to get insights on this topic"},{value:"item2",text:"User - can answer general questions and have some basic concepts"},{value:"item3",text:"Professional - can answer and discuss domain-specific well"},{value:"item4",text:"Expert - highly informative and can timely answer critical questions"}]}]}],showTitle:false}
+
+function sendDataToServer(survey) {
+    survey.sendResult('24e9d4cd-f5f6-4742-858a-6506c5e47565');
+}
+
+var survey = new Survey.Model(surveyJSON);
+$("#surveyContainer").Survey({
+    model: survey,
+    onComplete: sendDataToServer
+});
+</script>
+
