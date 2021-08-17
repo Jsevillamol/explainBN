@@ -20,7 +20,10 @@ def my_form():
     model, target, evidence_nodes = load_network("asia")
     bn_graph_fn = "graph.png"
     draw_model(model, output_fn = f"static/{bn_graph_fn}")
-    variable_description = model.variable_description.to_html(classes='data')
+    variable_description = \
+      render_template("variable_description.html",
+                        variable_description = model.variable_description,
+                      )
     scoring_table = generate_scoring_table(model, target, evidence_nodes)
     
     # Treatment no mistake

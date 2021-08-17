@@ -1,0 +1,17 @@
+<table class="table table-bordered">
+<!--   <table border="1" class="dataframe data"> -->
+  <thead>
+    <tr style="text-align: right;">
+      <th>Variable</th>
+      <th>Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for idx, row in variable_description.iterrows() %}
+    <tr>
+      <td>{{row['Variable']}}</td>
+      <td>{{row['Meaning']}}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
