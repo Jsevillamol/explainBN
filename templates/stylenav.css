@@ -18,3 +18,8 @@ body { padding-top: 60px; font-family: Arial, sans-serif;}
 .collapsed .fa:before {
   content: "\f13a";
 }
+
+textbig
+{
+	font-size: calc(12px+3vw);
+}
