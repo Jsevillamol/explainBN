@@ -70,11 +70,10 @@ function openTab(evt, tabName) {
 
 {% for output in interactive_output %}
   <div id="{{html_element_id}}_{{output.id}}", class="tabcontent">
-  <p>
   {% for line in output.text %}
-     {{ line }} 
+     <p> {{ line }} </p>
   {% endfor %}
-  </p> <hr>
+   <hr>
   <img src="{{ url_for('static', filename=output.img) }}" />
   </div>
 {% endfor %}
