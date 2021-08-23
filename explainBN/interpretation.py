@@ -69,7 +69,7 @@ def read_scoring_table(model, target, evidence, scoring_table,
       commentary = f"This consideration changes the probability that {explanation} from {old_p*100:0.2f}% to {p*100:0.2f}%"
       text = row["explanation"] + [commentary]
       
-      fn = f"graph_{len(interactive_output)}.png"
+      fn = f"{interactive_output_prefix}_{len(interactive_output)}.png"
       draw_model(model, [row['argument']], output_fn = f"static/{fn}")
       
       arguments.append(row['argument'])
@@ -88,7 +88,7 @@ def read_scoring_table(model, target, evidence, scoring_table,
     text = f"After taking into account these {len(interactive_output)} arguments, we conclude that " + \
            f"the probability that {explanation} is {p*100:0.2f}%"
     
-    fn = f"graph_{len(interactive_output)}.png"    
+    fn = f"{interactive_output_prefix}_{len(interactive_output)}.png"    
     draw_model(model, arguments, output_fn = f"static/{fn}")
 
     # p = prob(model, target, dict(evidence))
