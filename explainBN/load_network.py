@@ -1,6 +1,7 @@
 import zipfile
 import os
 import pandas as pd
+import pathlib
 
 from pgmpy.readwrite import BIFReader
 from pgmpy.inference import VariableElimination
@@ -24,7 +25,8 @@ def load_network(network_name, online = False, verbose=False):
     reader = BIFReader(fn)
     os.system(f"rm {fn}")
   else:
-    fn = f"./exampleBNs/{network_name}.bif"
+    fn = pathlib.Path(__file__).parent
+    fn /= f"../exampleBNs/{network_name}.bif"
     reader = BIFReader(fn)
     
   model = reader.get_model()
