@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 
 def read_scoring_table(model, target, evidence, scoring_table, 
                        interactive = False, 
+                       interactive_output_folder='static',
                        interactive_output_prefix='graph'):
   """ If interactive = False, return logodd score of target given evidence, according to scoring table
   """
@@ -45,7 +46,7 @@ def read_scoring_table(model, target, evidence, scoring_table,
     interactive_output = []
     arguments = [create_trivial_argument(target[0])]
     fn = f"{interactive_output_prefix}_{len(interactive_output)}.png"
-    draw_model(model, arguments, output_fn = f"static/{fn}")
+    draw_model(model, arguments, output_fn = f"{interactive_output_folder}/{fn}")
     
     interactive_output.append({
       "text" : [baseline_entry["explanation"]],
@@ -70,7 +71,7 @@ def read_scoring_table(model, target, evidence, scoring_table,
       text = row["explanation"] + [commentary]
       
       fn = f"{interactive_output_prefix}_{len(interactive_output)}.png"
-      draw_model(model, [row['argument']], output_fn = f"static/{fn}")
+      draw_model(model, [row['argument']], output_fn = f"{interactive_output_folder}/{fn}")
       
       arguments.append(row['argument'])
       
@@ -89,7 +90,7 @@ def read_scoring_table(model, target, evidence, scoring_table,
            f"the probability that {explanation} is {p*100:0.2f}%"
     
     fn = f"{interactive_output_prefix}_{len(interactive_output)}.png"    
-    draw_model(model, arguments, output_fn = f"static/{fn}")
+    draw_model(model, arguments, output_fn = f"{interactive_output_folder}/{fn}")
 
     # p = prob(model, target, dict(evidence))
     # print(f"For comparison, the estimation of the probability using message passing is {p*100:0.2f}%")
