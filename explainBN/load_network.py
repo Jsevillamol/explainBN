@@ -24,7 +24,7 @@ def load_network(network_name, online = False, verbose=False):
     reader = BIFReader(fn)
     os.system(f"rm {fn}")
   else:
-    fn = f"exampleBNs/{network_name}.bif"
+    fn = f"./exampleBNs/{network_name}.bif"
     reader = BIFReader(fn)
     
   model = reader.get_model()
