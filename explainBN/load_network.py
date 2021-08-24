@@ -2,6 +2,8 @@ import zipfile
 import os
 import pandas as pd
 import pathlib
+import numpy as np
+import json
 
 from pgmpy.readwrite import BIFReader
 from pgmpy.inference import VariableElimination
@@ -31,40 +33,50 @@ def load_network(network_name, online = False, verbose=False):
     
   model = reader.get_model()
   model.states = reader.get_states()
+  
+  # Decorate the model
+  model, target, evidence_nodes = \
+    decorate_model(model, model_name = network_name)
+  
 
-  # Dictionary of targets and evidence_nodes
-  NETWORK_NODES = {
-      "asia" : {
-          "target" : ("lung", "yes"),
-          "evidence_nodes" : {'asia', 'tub', 'smoke', 'bronc', 
-                              'xray', 'dysp'}
-      },
-      "cancer" : {
-          "target" : ("Cancer", "True"),
-          #"evidence_nodes" : {'Pollution', 'Smoker', 'Xray', 'Dyspnoea', 'Cancer'}
-      },
-      "earthquake" : {
-          "target" : ("Earthquake", "True"),
-          "evidence_nodes" : {'Burglary', 'Alarm', 'JohnCalls', 'MaryCalls'}
-      },
-      "child" : {
-          "target" : ("Sick", "yes"),
-      },
-      "three_nations" : {
-          "target" : ("Trubia launched missile", "True")
-      }
-  }
+  # Precompute baseline marginal distribution of target
+  model.baselines = {}
+  v = VariableElimination(model)
+  for node in model.nodes:
+    model.baselines[node] = v.query(variables=[node], 
+                                    evidence={}, 
+                                    show_progress=False)
+    
+  return model, target, evidence_nodes
 
-
-  # Select observable nodes and target
+def decorate_model(model, model_name=None):
+   
+  
+  fn = pathlib.Path(__file__).parent
+  fn /= f"../exampleBNs/{model_name}.json"
+  with open(fn, mode='r') as file:
+    explanation_json = json.load(file)
   try:
-    target = NETWORK_NODES[network_name]["target"]
+    pass
+  except:
+    explanation_json = {}
+    
+  print(explanation_json)
+    
+  try:
+    target_node = explanation_json["target_node"]
   except KeyError:
     target_node = np.random.choice(model.nodes())
-    target = (target_node, np.random.choice(model.states[target_node]))
+   
+  try:
+    target_state = explanation_json["target_state"]
+  except KeyError:
+    target_state = np.random.choice(model.states[target_node])
+    
+  target = (target_node, target_state)
 
   try:
-    evidence_nodes = NETWORK_NODES[network_name]["evidence_nodes"]
+    evidence_nodes = explanation_json["evidence_nodes"]
   except KeyError:
     evidence_nodes = list(model.nodes())
     evidence_nodes.remove(target[0])
@@ -74,214 +86,42 @@ def load_network(network_name, online = False, verbose=False):
   for evidence_node in evidence_nodes:
     assert evidence_node in model.nodes()
 
-  if verbose:
-    print(f"Number of nodes = {len(model.nodes)}")
-    print(f"Number of edges = {len(model.edges)}")
-
-    print(f"target = {target}")
-    print(f"evidence_nodes = {evidence_nodes}")
-
-  # Add explanation of nodes
-  if network_name == 'asia':
-
-    model.variable_description = pd.DataFrame([
-        ("smoke", "Whether the patient smokes"),
-        ("asia", "Whether the patient has recently been to Asia"),
-        ("lung", "Whether the patient has lung cancer"),
-        ("bronc", "Whether the patient has bronchitis"),
-        ("tub", "Whether the patient has tuberculosis"),
-        ("lung_disease", "True if the patient has either lung cancer or tuberculosis"),
-        ("xray", "Whether the patient's xray results show an abnormality"),
-        ("dysp", "Whether the patient experiences shortness of breath (dyspnea)"),
-    ], columns=['Variable', 'Meaning'])
-
-    model.explanation_dictionary = {
-        ('smoke', 'yes')  : {
-            'explanation' : 'the patient smokes',
-            'polarity'    : 'positive',
-        },
-        ('smoke', 'no')   : {
-            'explanation' : 'the patient does not smoke',
-            'contrastive_explanation' : 'the patient smokes',
-            'polarity'    : 'negative',
-        },
-        ('asia', 'yes')  : {
-            'explanation' : 'the patient has recently visited Asia',
-            'polarity'    : 'positive',
-        },
-        ('asia', 'no')   : {
-            'explanation' : 'the patient has not recently visited Asia',
-            'contrastive_explanation' : 'the patient has recently visited Asia',
-            'polarity'    : 'negative',
-        },
-        ('lung', 'yes')  : {
-            'explanation' : 'the patient has lung cancer',
-            'polarity'    : 'positive',
-        },
-        ('lung', 'no')   : {
-            'explanation' : 'the patient does not have lung cancer',
-            'contrastive_explanation' : 'the patient has lung cancer',
-            'polarity'    : 'negative',
-        },
-        ('bronc', 'yes')  : {
-            'explanation' : 'the patient has bronchitis',
-            'polarity'    : 'positive',
-        },
-        ('bronc', 'no')   : {
-            'explanation' : 'the patient does not have bronchitis',
-            'contrastive_explanation' : 'the patient has bronchitis',
-            'polarity'    : 'negative',
-        },
-        ('tub', 'yes')  : {
-            'explanation' : 'the patient has tuberculosis',
-            'polarity'    : 'positive',
-        },
-        ('tub', 'no')   : {
-            'explanation' : 'the patient does not have tuberculosis',
-            'contrastive_explanation' : 'the patient has tuberculosis',
-            'polarity'    : 'negative',
-        },
-        ('lung_disease', 'yes')   : {
-            'explanation' : 'the patient has a serious lung disease',
-            'polarity'    : 'positive',
-        },
-        ('lung_disease', 'no')   : {
-            'explanation' : 'the patient does not have a serious lung disease',
-            'polarity'    : 'positive',
-        },
-        ('xray', 'abnormal')   : {
-            'explanation' : 'the patient\'s xray results show an abnormality',
-            'polarity'    : 'positive',
-        },
-        ('xray', 'normal')   : {
-            'explanation' : 'the patient\'s xray results are normal',
-            'polarity'    : 'positive',
-        },
-        ('dysp', 'yes')  : {
-            'explanation' : 'the patient experiences shortness of breath',
-            'polarity'    : 'positive',
-        },
-        ('dysp', 'no')   : {
-            'explanation' : 'the patient does not experience shortness of breath',
-            'contrastive_explanation' : 'the patient experiences shortness of breath',
-            'polarity'    : 'negative',
-        },
-    }
-
-  elif network_name == 'earthquake':
-    model.explanation_dictionary = {
-        ('Burglary', 'True')    : "a burglary happened" ,
-        ('Burglary', 'False')   : "no burglary occured",
-        ('Earthquake', 'True')  : "an earthquake has happened",
-        ('Earthquake', 'False') : "there was no earthquake",
-        ('Alarm', 'True')       : "the alarm rang",
-        ('Alarm', 'False')      : "the alarm didn't ring",
-        ('JohnCalls', 'True')   : "John called",
-        ('JohnCalls', 'False')  : "John didn't call",
-        ('MaryCalls', 'True')   : "Mary called",
-        ('MaryCalls', 'False')  : "Mary didn't call",
-    }
-
-  elif network_name == "three_nations":
-    model.explanation_dictionary = {
-   ('Oclar Expert 1 Report','Neg'): {
-        'explanation': 'Oclar expert 1 confirms they had missiles', 
-        'polarity': 'positive'},
-   ('Oclar Expert 1 Report','Pos'): {
-       'explanation': 'Oclar expert 1 confirms they had missiles', 
-       'polarity': 'positive'},
-   ('Oclar Expert 2 Report','Neg'): {
-       'explanation': 'Oclar expert 2 denies they had missiles', 
-       'polarity': 'positive'},
-   ('Oclar Expert 2 Report','Pos'): {
-       'explanation': 'Oclar expert 2 confirms they had missiles', 
-       'polarity': 'positive'},
-   ('Oclar has weapons','False'): {
-       'contrastive_explanation': 'Oclar has missiles', 
-       'explanation': 'Oclar does not have missiles', 
-       'polarity': 'negative'},
-   ('Oclar has weapons','True'): {
-       'explanation': 'Oclar has missiles', 
-       'polarity': 'positive'},
-   ('Oclar launched missile','False'): {
-       'contrastive_explanation': 'Oclar did not launch a missile', 
-       'explanation': 'Oclar launched a missile', 
-       'polarity': 'negative'},
-   ('Oclar launched missile','True'): {
-       'explanation': 'Oclar launched a missile', 
-       'polarity': 'positive'},
-   ('Residue Detected','Neg'): {
-       'contrastive_explanation': 'some missile residue was detected', 
-       'explanation': 'no missile residue was detected', 
-       'polarity': 'positive'},
-   ('Residue Detected','Pos'): {
-       'explanation': 'some missile residue was detected', 
-       'polarity': 'positive'},
-   ('Trubia Expert 1 Report','Neg'): {
-       'explanation': 'expert 1 from Trubia denies they had weapons', 
-       'polarity': 'positive'},
-   ('Trubia Expert 1 Report','Pos'): {
-       'explanation': 'expert 1 from Trubia confirms they have missiles', 
-       'polarity': 'positive'},
-   ('Trubia Expert 2 Report','Neg'): {
-       'explanation': 'expert 2 from Trubia denies they had weapons', 
-       'polarity': 'positive'},
-   ('Trubia Expert 2 Report','Pos'): {
-       'explanation': 'expert 2 from Trubia confirms they had weapons', 
-       'polarity': 'positive'},
-   ('Trubia has weapons','False'): {
-       'contrastive_explanation': 'Trubia has missiles', 
-       'explanation': 'Trubia does not have missiles', 
-       'polarity': 'negative'},
-   ('Trubia has weapons','True'): { 
-       'explanation': 'Trubia has missiles', 
-       'polarity': 'positive'},
-   ('Trubia launched missile','False'): {
-       'contrastive_explanation': 'Trubia launched a missile', 
-       'explanation': 'Trubia did not launch a missile', 
-       'polarity': 'negative'},
-   ('Trubia launched missile','True'): {
-       'explanation': 'Trubia launched a missile', 
-       'polarity': 'positive'}
-     }
-    model.variable_description = pd.DataFrame([
-      ("Oclar has weapons", "Whether Oclar has missiles."),
-      ("Oclar launched missile", "Whether Oclar launched a missile"),
-      ("Oclar Expert 2 Report", "Whether expert 2 from Oclar denies having missiles."),
-      ("Oclar Expert 1 Report", "Whether expert 1 from Oclar denies having missiles."),
-      ("Trubia has weapons","Whether Trubia has missiles" ),
-      ("Trubia launched missile", "Whether Trubia launched a missile"),
-      ("Residue Detected", "Whether missile residue was detected"),
-      ("Trubia Expert 1 Report", "Whether expert 1 from Trubia denies having missiles"),
-      ("Trubia Expert 2 Report", "Whether expert 2 from Trubia denies having missiles"),
-    ], columns=['Variable', 'Meaning'])
-
-  else:
+  # Add node descriptions
+  try:
     model.variable_description = \
-      pd.DataFrame([(node, node) for node in model.nodes])
-    model.explanation_dictionary = {
-        (node, state) : {
-            "explanation" : f"{node} = {state}",
-            "contrastive_explanation" : f"not {node} = {state}",
-            "polarity" : "positive",
-        }
-        for node in model.nodes
-        for state in model.states[node]
-    }
-
-  # Precompute baseline marginal distribution of target
-  model.baselines = {}
-  # model.baselines[target[0]] = VariableElimination(model).query(variables=[target[0]],
-  #                                                               evidence={},
-  #                                                               show_progress=False)
-
-  v = VariableElimination(model)
-  for node in model.nodes:
-    model.baselines[node] = v.query(variables=[node], 
-                                    evidence={}, 
-                                    show_progress=False)
+      pd.DataFrame([(node, explanation_json["nodes"][node]["description"]) 
+                    for node in model.nodes], 
+                    columns= ['Variable', 'Meaning'])
     
+  except KeyError:
+    model.variable_description = \
+      pd.DataFrame([(node, node) for node in model.nodes], 
+                   columns= ['Variable', 'Meaning'])
+  
+  # Add explanation of states
+  model.explanation_dictionary = {}
+  for node in model.nodes:
+    for state in model.states[node]:
+      try:
+        d = explanation_json["nodes"][node]["states"][state]
+      except KeyError:
+        d = {}
+      
+      model.explanation_dictionary[(node, state)] = {}
+      
+      model.explanation_dictionary[(node, state)]["explanation"] = \
+        d["explanation"] if "explanation" in d else f"{node} = {state}"
+      
+      model.explanation_dictionary[(node, state)]["contrastive_explanation"] = \
+        d["contrastive_explanation"] \
+        if "contrastive_explanation" in d \
+        else f"not {node} = {state}"
+      
+      model.explanation_dictionary[(node, state)]["polarity"] = \
+        d["polarity"] if "polarity" in d else "positive"
+  
   return model, target, evidence_nodes
+  
 
 # READ DNE FILES
 rhs = lambda s : re.match(r".*(.*) = (.*).*", s).group(2).strip(";")

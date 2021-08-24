@@ -1,0 +1,117 @@
+{
+"target_node" : "lung",
+"target_state" : "yes",
+"nodes":
+  {
+      "smoke": {
+          "states": {
+              "yes": {
+                  "explanation": "the patient smokes",
+                  "polarity": "positive"
+              },
+              "no": {
+                  "explanation": "the patient does not smoke",
+                  "contrastive_explanation": "the patient smokes",
+                  "polarity": "negative"
+              }
+          },
+          "description": "Whether the patient smokes"
+      },
+      "asia": {
+          "states": {
+              "yes": {
+                  "explanation": "the patient has recently visited Asia",
+                  "polarity": "positive"
+              },
+              "no": {
+                  "explanation": "the patient has not recently visited Asia",
+                  "contrastive_explanation": "the patient has recently visited Asia",
+                  "polarity": "negative"
+              }
+          },
+          "description": "Whether the patient has recently been to Asia"
+      },
+      "lung": {
+          "states": {
+              "yes": {
+                  "explanation": "the patient has lung cancer",
+                  "polarity": "positive"
+              },
+              "no": {
+                  "explanation": "the patient does not have lung cancer",
+                  "contrastive_explanation": "the patient has lung cancer",
+                  "polarity": "negative"
+              }
+          },
+          "description": "Whether the patient has lung cancer"
+      },
+      "bronc": {
+          "states": {
+              "yes": {
+                  "explanation": "the patient has bronchitis",
+                  "polarity": "positive"
+              },
+              "no": {
+                  "explanation": "the patient does not have bronchitis",
+                  "contrastive_explanation": "the patient has bronchitis",
+                  "polarity": "negative"
+              }
+          },
+          "description": "Whether the patient has bronchitis"
+      },
+      "tub": {
+          "states": {
+              "yes": {
+                  "explanation": "the patient has tuberculosis",
+                  "polarity": "positive"
+              },
+              "no": {
+                  "explanation": "the patient does not have tuberculosis",
+                  "contrastive_explanation": "the patient has tuberculosis",
+                  "polarity": "negative"
+              }
+          },
+          "description": "Whether the patient has tuberculosis"
+      },
+      "lung_disease": {
+          "states": {
+              "yes": {
+                  "explanation": "the patient has a serious lung disease",
+                  "polarity": "positive"
+              },
+              "no": {
+                  "explanation": "the patient does not have a serious lung disease",
+                  "polarity": "positive"
+              }
+          },
+          "description": "True if the patient has either lung cancer or tuberculosis"
+      },
+      "xray": {
+          "states": {
+              "abnormal": {
+                  "explanation": "the patient's xray results show an abnormality",
+                  "polarity": "positive"
+              },
+              "normal": {
+                  "explanation": "the patient's xray results are normal",
+                  "polarity": "positive"
+              }
+          },
+          "description": "Whether the patient's xray results show an abnormality"
+      },
+      "dysp": {
+          "states": {
+              "yes": {
+                  "explanation": "the patient experiences shortness of breath",
+                  "polarity": "positive"
+              },
+              "no": {
+                  "explanation": "the patient does not experience shortness of breath",
+                  "contrastive_explanation": "the patient experiences shortness of breath",
+                  "polarity": "negative"
+              }
+          },
+          "description": "Whether the patient experiences shortness of breath (dyspnea)"
+      }
+  }
+}
