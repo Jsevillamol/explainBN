@@ -139,8 +139,8 @@ def draw_model(model, arguments=[], argument=None, output_fn = "static/graph.png
     target = get_target(argument)
 
     node_color_map = ['LightSalmon' if node == target else
-                      'SkyBlue' if node in sources else 
-                      'DodgerBlue' if node in nodes_to_color else 
+                      'DodgerBlue' if node in sources else 
+                      'SkyBlue' if node in nodes_to_color else 
                       'Gainsboro' 
                       for node in model]
         
