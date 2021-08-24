@@ -1,6 +1,15 @@
 {
 "target_node" : "lung",
 "target_state" : "yes",
+"evidence_nodes" : 
+  [
+    "smoke", 
+    "asia", 
+    "bronc",
+    "tub", 
+    "xray", 
+    "dysp"
+  ],
 "nodes":
   {
       "smoke": {

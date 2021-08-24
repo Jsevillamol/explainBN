@@ -50,18 +50,14 @@ def load_network(network_name, online = False, verbose=False):
   return model, target, evidence_nodes
 
 def decorate_model(model, model_name=None):
-   
   
-  fn = pathlib.Path(__file__).parent
-  fn /= f"../exampleBNs/{model_name}.json"
-  with open(fn, mode='r') as file:
-    explanation_json = json.load(file)
   try:
-    pass
+    fn = pathlib.Path(__file__).parent
+    fn /= f"../exampleBNs/{model_name}.json"
+    with open(fn, mode='r') as file:
+      explanation_json = json.load(file)
   except:
     explanation_json = {}
-    
-  print(explanation_json)
     
   try:
     target_node = explanation_json["target_node"]

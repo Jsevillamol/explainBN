@@ -193,7 +193,10 @@ def introduce_error(model, target, evidence, th = 0.1):
   p_perturbed = p_original
   s_perturbed = from_prob_to_logodd(p_perturbed)
 
-  assert np.abs(s_original - s_perturbed) < th, "At the start of the loop the two logodd scores should match!"
+  assert np.abs(s_original - s_perturbed) < th, \
+  "At the start of the loop the two logodd scores should match!\n" + \
+  f"But they were s_original = {s_original}, s_perturbed = {s_perturbed}"
+                                                  
 
   while np.abs(s_original - s_perturbed) < th:
 
