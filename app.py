@@ -18,13 +18,45 @@ def my_form():
     
     # Load model
     model, target, evidence_nodes = load_network("asia")
+    scoring_table = generate_scoring_table(model, target, evidence_nodes)
+    
+    # Generate survey instructions
+    
+    example_control_html = \
+        render_template("control.html",
+                        html_element_id = 'example_control',
+                        bn_model = model,
+                        squeeze_fn = np.squeeze, # Yes I know this is very hacky
+                        )
+                        
+    evidence = random_evidence(model, evidence_nodes)
+    interactive_output = read_scoring_table(model, target, evidence, 
+                                            scoring_table, 
+                                            interactive = True,
+                                            interactive_output_prefix = 'io_example')
+                        
+    example_treatment_html = \
+        render_template("treatment.html", 
+                        html_element_id = 'example_treatment',
+                        interactive_output = interactive_output,
+                        )
+    
+    
+    
+    instructions_html = \
+      render_template("instructions.html",
+                        example_control_html = example_control_html,
+                        example_treatment_html = example_treatment_html,
+                      )
+    
+    # Generate description of network
     bn_graph_fn = "graph.png"
     draw_model(model, output_fn = f"static/{bn_graph_fn}")
+    
     variable_description = \
       render_template("variable_description.html",
                         variable_description = model.variable_description,
                       )
-    scoring_table = generate_scoring_table(model, target, evidence_nodes)
     
     # Treatment no mistake
     evidence = random_evidence(model, evidence_nodes)
@@ -147,6 +179,7 @@ def my_form():
     # Construct and return HTML template
     
     return render_template("template.html",
+                           instructions_html = instructions_html,
                            bn_graph=bn_graph_fn,
                            variable_description=variable_description,
                            
