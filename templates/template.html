@@ -1,6 +1,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -17,6 +18,26 @@
   p {
     font-size: font-size: calc(30px+3vw);
   }
+  </style>
+  
+  <!-- Libraries for JSBayes-viz -->
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+  <script src="{{ url_for('static', filename='node_modules/d3/d3.js') }}"></script>
+  <script src="{{ url_for('static', filename='node_modules/lodash/lodash.js') }}"></script>
+  <script src="{{ url_for('static', filename='node_modules/graphlib/dist/graphlib.core.js') }}"></script>
+  <script src="{{ url_for('static', filename='node_modules/dagre/dist/dagre.core.js') }}"></script>
+  <script src="{{ url_for('static', filename='node_modules/jsbayes/jsbayes.js') }}"></script>
+  <script src="{{ url_for('static', filename='node_modules/jsbayes-viz/jsbayes-viz.js') }}"></script>
+
+  <!-- Style for JSBayes-viz -->
+  <style>
+      svg { border: 1px solid black; }
+      svg g rect.node-shape { border-radius: 5px !important; fill:#cceeff !important; cursor: move; }
+      svg g text.node-name { font-weight: 800 !important }
+      svg g rect.node-bar { fill: DodgerBlue !important }
+      svg g text.node-value { fill:rgb(0,0,0) !important; font-size: 15px; cursor: pointer; }
+      svg line.edge-line { stroke:rgb(0,0,0) !important }
+      svg path.edge-head { fill:rgb(0,0,0) !important }
   </style>
 
 
