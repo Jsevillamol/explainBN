@@ -49,8 +49,8 @@
       var graph_{{html_element_id}} = getGraph_{{html_element_id}}();
       jsbayesviz.draw({
         id: '#{{html_element_id}}',
-        width: 800,
-        height: 400,
+        width: $(window).width() * 0.6,
+        height: $(window).height() * 0.6,
         graph: graph_{{html_element_id}},
         samples: 15000
       });
