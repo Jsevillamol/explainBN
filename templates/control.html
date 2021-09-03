@@ -1,46 +1,40 @@
-<!-- Libraries for JSBayes-viz -->
+
+<!-- Control visualization -->
+<div style="text-align:center;">
+<svg id="{{html_element_id}}" width="800" height="400"></svg>
+</div>
 
 <script>
-  function getGraph_{{html_element_id}}() {
     
-    var graph = jsbayes.newGraph();
-    graph.saveSamples = false;
-    
-    <!-- Add nodes to graph -->
-    {% for node in bn_model.nodes %}
-    var {{ node }} = graph.addNode( '{{ node }}', [{% for state in bn_model.states[node] %} '{{ state }}',  {% endfor %}]);
-    {% endfor %}
-    
-    <!-- Add edges to graph -->
-    {% for parent, child in bn_model.edges %}
-    {{child}}.addParent({{parent}});
-    {% endfor %}
-    
-    <!-- Add CPDs to graph -->
-    {% for node in bn_model.nodes %}
-    {{node}}.setCpt({{squeeze_fn(bn_model.get_cpds(node).values.T.reshape((-1,2))).tolist()}});
-    {% endfor %}
+  var graph = jsbayes.newGraph();
+  graph.saveSamples = false;
+  
+  <!-- Add nodes to graph -->
+  {% for node in bn_model.nodes %}
+  var {{ node }} = graph.addNode( '{{ node }}', [{% for state in bn_model.states[node] %} '{{ state }}',  {% endfor %}]);
+  {% endfor %}
+  
+  <!-- Add edges to graph -->
+  {% for parent, child in bn_model.edges %}
+  {{child}}.addParent({{parent}});
+  {% endfor %}
+  
+  <!-- Add CPDs to graph -->
+  {% for node in bn_model.nodes %}
+  {{node}}.setCpt({{squeeze_fn(bn_model.get_cpds(node).values.T.reshape((-1,2))).tolist()}});
+  {% endfor %}
+   
+  graph.reinit();
+  graph.sample(20000);
 
-    graph.sample(20000);
-
-    var g = jsbayesviz.fromGraph(graph);
-    return g;
-  }
-      
-  $(document).ready(function() {
-    (function(window) { 
-      var graph_{{html_element_id}} = getGraph_{{html_element_id}}();
-      jsbayesviz.draw({
-        id: '#{{html_element_id}}',
-        width: $(window).width() * 0.6,
-        height: $(window).height() * 0.6,
-        graph: graph_{{html_element_id}},
-        samples: 15000
-      });
-      
-      
-    })(window);
-  });
+  var g = jsbayesviz.fromGraph(graph, "{{html_element_id}}");
+  
+  jsbayesviz.draw({
+          id: '#{{html_element_id}}',
+          width: 800,
+          height: 400,
+          graph: g,
+          samples: 15000,
+          canBeObserved: true,
+        });
 </script>
-
-<svg id="{{html_element_id}}"></svg>

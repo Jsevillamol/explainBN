@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>asia, jsbayes discrete bayesian belief network visualization and interaction example</title>
+    <style>
+      svg { border: 1px solid black; }
+      svg g rect.node-shape { border-radius: 5px !important; fill:#ffecb3 !important; cursor: move; }
+      svg g text.node-name { font-weight: 800 !important }
+      svg g rect.node-bar { fill: green !important }
+      svg g text.node-value { fill:rgb(0,0,0) !important; font-size: 15px; cursor: pointer; }
+      svg line.edge-line { stroke:rgb(0,0,0) !important }
+      svg path.edge-head { fill:rgb(0,0,0) !important }
+    </style>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.js"></script>
+    <script src="https://cdn.jsdelivr.net/lodash/4.11.1/lodash.js"></script>
+    <script src="https://rawgithub.com/cpettitt/graphlib/master/dist/graphlib.core.js"></script>
+    <script src="https://rawgithub.com/cpettitt/dagre/master/dist/dagre.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://rawgithub.com/vangj/jsbayes/master/jsbayes.js"></script>
+    <script src="https://rawgithub.com/vangj/jsbayes-viz/master/jsbayes-viz.js"></script>
+    <script>
+      function getGraph() {
+    var graph = jsbayes.newGraph();
+    graph.saveSamples = true;
+
+    var visitAsia = graph.addNode('VisitAsia', ['Visit', 'No_Visit']);
+    var tuberculosis = graph.addNode('Tuberculosis', ['Present', 'Absent']);
+    var smoking = graph.addNode('Smoking', ['Smoker', 'NonSmoker']);
+    var cancer = graph.addNode('Cancer', ['Present', 'Absent']);
+    var tborca = graph.addNode('TbOrCa', ['True', 'False']);
+    var xray = graph.addNode('XRay', ['Abnormal', 'Normal']);
+    var bronchitis = graph.addNode('Bronchitis', ['Present', 'Absent']);
+    var dyspnea = graph.addNode('Dyspnea', ['Present', 'Absent']);
+
+    tuberculosis.addParent(visitAsia);
+    cancer.addParent(smoking);
+    tborca.addParent(tuberculosis);
+    tborca.addParent(cancer);
+    xray.addParent(tborca);
+    bronchitis.addParent(smoking);
+    dyspnea.addParent(tborca);
+    dyspnea.addParent(bronchitis);
+
+    visitAsia.setCpt([0.01, 0.99]);
+    tuberculosis.setCpt([
+      [0.05, 0.95], 
+      [0.01, 0.99]
+    ]);
+    smoking.setCpt([0.5, 0.5]);
+    cancer.setCpt([
+      [0.1, 0.9], 
+      [0.01, 0.99]
+    ]);
+    tborca.setCpt([
+      [1.0, 0.0], 
+      [1.0, 0.0], 
+      [1.0, 0.0], 
+      [0.0, 1.0]
+    ]);
+    xray.setCpt([
+      [0.98, 0.02], 
+      [0.05, 0.95]
+    ]);
+    bronchitis.setCpt([
+      [0.6, 0.4], 
+      [0.3, 0.7]
+    ]);
+    dyspnea.setCpt([
+      [0.9, 0.1],
+      [0.7, 0.3],
+      [0.8, 0.2],
+      [0.1, 0.9]
+    ]);
+
+    graph.sample(20000);
+
+    var g = jsbayesviz.fromGraph(graph);
+    return g;
+  }
+      
+      $(document).ready(function() {
+        (function(window) { 
+          var graph = getGraph();
+          jsbayesviz.draw({
+            id: '#bbn',
+            width: 800,
+            height: 800,
+            graph: graph,
+            samples: 15000
+          });
+          
+          $('#btnDownloadJson').click(function() {
+            jsbayesviz.downloadSamples(graph, true);
+          });
+          
+          $('#btnDownloadCsv').click(function() {
+            jsbayesviz.downloadSamples(graph, false, { rowDelimiter: '\n', fieldDelimiter: ',' });
+          });
+        })(window);
+      });
+    </script>
+  </head>
+
+  <body>
+    <svg id="bbn">
+    </svg>
+    <div>
+      <button id="btnDownloadJson">download samples as json</button>
+      <button id="btnDownloadCsv">download samples as csv</button>
+    </div>
+  </body>
+
+</html>
