@@ -22,6 +22,14 @@ def my_form():
     
     # Generate survey instructions
     
+    bn_graph_fn = "graph.png"
+    draw_model(model, output_fn = f"static/{bn_graph_fn}")
+    
+    variable_description = \
+      render_template("variable_description.html",
+                        variable_description = model.variable_description,
+                      )
+    
     example_control_html = \
         render_template("control.html",
                         html_element_id = 'example_control',
@@ -45,18 +53,14 @@ def my_form():
     
     instructions_html = \
       render_template("instructions.html",
-                        example_control_html = example_control_html,
-                        example_treatment_html = example_treatment_html,
+                      example_control_html = example_control_html,
+                      example_treatment_html = example_treatment_html,
+                        
+                      bn_graph=bn_graph_fn,
+                      variable_description=variable_description,
                       )
     
-    # Generate description of network
-    bn_graph_fn = "graph.png"
-    draw_model(model, output_fn = f"static/{bn_graph_fn}")
     
-    variable_description = \
-      render_template("variable_description.html",
-                        variable_description = model.variable_description,
-                      )
     
     # Treatment no mistake
     evidence = random_evidence(model, evidence_nodes)
@@ -180,8 +184,6 @@ def my_form():
     
     return render_template("template.html",
                            instructions_html = instructions_html,
-                           bn_graph=bn_graph_fn,
-                           variable_description=variable_description,
                            
                            # Treatment no mistake components
                            html_evidence_treatment_no_mistake = html_evidence_treatment_no_mistake,

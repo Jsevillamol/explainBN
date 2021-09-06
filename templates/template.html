@@ -205,20 +205,7 @@ For general information about how we use your data, the University’s Privacy N
 	<br>
 	
 	
-<div class="container">
-<div class="row"> 	  
-	
-			
-			<span class="anchor" id="instructions"></span>
-<div class="section"></div>
-	   
-<br><br>
-  
-  {{instructions_html|safe}}
-  
-	</div></div>
-	
-	<br>
+
 	
 	
 	
@@ -233,32 +220,23 @@ For general information about how we use your data, the University’s Privacy N
   {% include 'demographics.html' %}
   
 	</div></div>
-	
-	
-	<div class="container">
   
-	 <div class="row">
-	  
-	  
-	 <p class="textbig">
-
-<br>Here you will see a Bayesian Network, some evidence and an explained output.
-
-<br>The Bayesian Network we will be using as an example is used for medical diagnosis. 
-<br>In particular, it is used to determine the chances that a patient has lung cancer, given their symptoms, risk factors and medical history.
- </p>
-	
   
+  <br>
+  
+  <div class="container">
+<div class="row"> 	  
 	
-
-  <!-- Bayesian Network graph -->
-	<img src="{{ url_for('static', filename=bn_graph) }}" />
-		</div></div>
-	 <hr> 
-   
-  {{ variable_description|safe }}
+			
+			<span class="anchor" id="instructions"></span>
+<div class="section"></div>
+	   
+<br><br>
+  
+  {{instructions_html|safe}}
+  
+	</div></div>
 	
-	</div>
 	
 	<div class="container">
 
